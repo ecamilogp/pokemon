@@ -1,0 +1,1 @@
+<template>pokemon view</template>
