@@ -5,7 +5,14 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    redirect: '/pokemon',
+    children: [
+      {
+        path: 'pokemon',
+        name: 'Pokemon',
+        component: Home,
+      },
+    ],
   },
 ];
 
