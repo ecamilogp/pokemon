@@ -73,7 +73,7 @@ onMounted(async () => {
     </div>
 
     <div
-      class="w-full max-w-4xl rounded-xl shadow-2xl border border-black bg-white overflow-hidden flex flex-col lg:flex-row"
+      class="w-full max-w-4xl rounded-xl shadow-2xl border border-black bg-white mt-24 overflow-hidden flex flex-col lg:flex-row"
     >
       <!-- Encabezado de la tarjeta de dettale-->
       <div
