@@ -26,18 +26,18 @@ const props = defineProps({
         'rounded-xl transform hover:scale-105 transition-all duration-300 ease-in-out',
       ]"
       :style="{
-        backgroundColor: color,
+        backgroundColor: props.color,
         borderRadius: '25px',
       }"
     >
-      <!--esto se encraga del estilo de la Imagen del pokemon en la tarjeta  -->
+      <!--esto se encarga del estilo de la Imagen del pokemon en la tarjeta  -->
       <q-card-section class="flex justify-center relative">
         <div
           class="w-32 h-32 bg-gray-100 rounded-full -mt-14 z-10 flex items-center justify-center shadow-md"
         >
           <img
-            :src="pokemon.image"
-            :alt="pokemon.name"
+            :src="props.pokemon.image"
+            :alt="props.pokemon.name"
             class="w-28 h-28 object-contain"
           />
         </div>
@@ -46,13 +46,13 @@ const props = defineProps({
       <!-- estilo para el nombre y el id del pokemon dentro de la tarjeta  -->
       <q-card-section class="text-center">
         <div class="bg-gray-100 text-sm text-gray-900 mb-1">
-          #{{ pokemon.id }}
+          #{{ props.pokemon.id }}
         </div>
         <div
           class="tex text-2xl font-semibold text-gray-900"
           style="margin-top: 5px"
         >
-          {{ pokemon.name }}
+          {{ props.pokemon.name }}
         </div>
       </q-card-section>
     </q-card>

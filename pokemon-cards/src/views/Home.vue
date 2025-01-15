@@ -4,20 +4,26 @@ import { onMounted, ref, computed } from 'vue';
 import PokemonCard from '../components/pokemonCard.vue';
 import logo from '../assets/logo pokemon.png';
 import { QSelect } from 'quasar';
+import type { Pokemon } from '../interface/pokemonInterface.ts';
+import type { TypeOption } from '../interface/typeOption.ts';
+import { useRouter } from 'vue-router';
 
+const router = useRouter(); //para poder usar la ruta
 const pokemonStore = usePokemonStore(); //para usar el store
 const searchName = ref(''); //variable reactiva para buscar pokemon
-const selectedType = ref(''); //variable reactiva para buscar los tipos de pokemon
+const selectedType = ref<TypeOption | null>(null); //variable reactiva para buscar los tipos de pokemon
+const pokemonLimit = ref(28); // Limitar la cantidad de Pokémon mostrados
 
 //limpia el input y el select para que vuelvan a aparecer todos los pokemon
 const resetFilters = () => {
   searchName.value = '';
-  selectedType.value = '';
+  selectedType.value = null;
+  pokemonLimit.value = 28;
 };
 
 //esto se encarga de filtrar los pokemon por nombre o por su tipo
 const filteredPokemons = computed(() => {
-  const filteredList = pokemonStore.pokemonList.filter((pokemon) => {
+  const filteredList = pokemonStore.pokemonList.filter((pokemon: Pokemon) => {
     const NameFound = pokemon.name
       .toLowerCase()
       .includes(searchName.value.toLowerCase());
@@ -32,7 +38,7 @@ const filteredPokemons = computed(() => {
     return NameFound && typesFound;
   });
 
-  return filteredList;
+  return filteredList.slice(0, pokemonLimit.value);
 });
 
 //colores para las tarjetas dependiendo del tipo de pokemon
@@ -56,6 +62,27 @@ const typeColors: Record<string, string> = {
   dark: '#1D8691',
   fairy: '#F7A7D3',
   stellar: '#A88ED5',
+};
+
+//función para cargar más Pokémon
+const loadMorePokemons = () => {
+  pokemonLimit.value += 20;
+  pokemonStore.fetchPokemon();
+};
+
+//función para desplazarse hacia arriba
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+//funcion que permite que al dar un click en la tarjeta se redirija componente de detalle
+//y envie informacion como el id y el nombre desde la ruta
+const goDetails = (id: number, name: string, color: string) => {
+  pokemonStore.setSelectedColor(color);
+  router.push({
+    name: 'PokemonDetails',
+    params: { id, name },
+  });
 };
 
 // ciclo de vida para mostrar los pokemon despues de montado el Dom
@@ -116,7 +143,6 @@ onMounted(() => {
             { label: 'Dragón', value: 'dragon' },
             { label: 'Oscuro', value: 'dark' },
             { label: 'Hada', value: 'fairy' },
-            { label: 'Estelar', value: 'stellar' },
           ]"
           outlined
           label="Tipo de pokemon"
@@ -145,11 +171,33 @@ onMounted(() => {
         :key="pokemon.id"
         :pokemon="pokemon"
         :color="typeColors[pokemon.type[0]] || '#D1D1D1'"
+        @click="
+          goDetails(pokemon.id, pokemon.name, typeColors[pokemon.type[0]])
+        "
       />
     </div>
 
     <div v-if="pokemonStore.loading" class="text-center text-lg font-semibold">
       Cargando...
+    </div>
+
+    <!-- Botones para cargar más Pokémon y subir -->
+    <div
+      class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-12 pb-12"
+    >
+      <q-btn
+        label="Cargar más Pokémon"
+        color="primary"
+        class="text-white text-lg"
+        @click="loadMorePokemons"
+      />
+      <q-btn
+        icon="arrow_upward"
+        label="Subir"
+        color="primary"
+        class="text-white text-lg"
+        @click="scrollToTop"
+      />
     </div>
   </div>
 </template>
