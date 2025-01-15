@@ -18,7 +18,7 @@ const props = defineProps({
   <!--estilo y margin para la tarjeta y que se diferencie cada una -->
 
   <div
-    class="rounded-xl shadow-lg p-1 bg-black"
+    class="rounded-xl shadow-lg p-1 bg-black cursor-pointer"
     :style="{ maxWidth: '210px', margin: '1rem' }"
   >
     <q-card
