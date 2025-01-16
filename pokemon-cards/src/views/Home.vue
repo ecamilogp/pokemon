@@ -8,12 +8,11 @@ import type { Pokemon } from '../interface/pokemonInterface.ts';
 import type { TypeOption } from '../interface/typeOption.ts';
 import { useRouter } from 'vue-router';
 
-const router = useRouter(); //para poder usar la ruta
-const pokemonStore = usePokemonStore(); //para usar el store
-const searchName = ref(''); //variable reactiva para buscar pokemon
-const selectedType = ref<TypeOption | null>(null); //variable reactiva para buscar los tipos de pokemon
+const router = useRouter();
+const pokemonStore = usePokemonStore();
+const searchName = ref('');
+const selectedType = ref<TypeOption | null>(null);
 
-//limpia el input y el select para que vuelvan a aparecer todos los pokemon
 const resetFilters = () => {
   searchName.value = '';
   selectedType.value = null;
@@ -32,14 +31,12 @@ const filteredPokemons = computed(() => {
       ? pokemon.type.includes(typeValue.toLowerCase())
       : true;
 
-    //retorna nombre encontrado y / o tipo encontrado
     return NameFound && typesFound;
   });
 
   return filteredList.slice();
 });
 
-//colores para las tarjetas dependiendo del tipo de pokemon
 const typeColors: Record<string, string> = {
   normal: '#BFB16E',
   fighting: '#CF5C34',
@@ -62,18 +59,14 @@ const typeColors: Record<string, string> = {
   stellar: '#A88ED5',
 };
 
-//función para cargar más Pokémon
 const loadMorePokemons = () => {
   pokemonStore.morePokemon();
 };
 
-//función para desplazarse hacia arriba
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-//funcion que permite que al dar un click en la tarjeta se redirija componente de detalle
-//y envie informacion como el id y el nombre desde la ruta
 const goDetails = (id: number, name: string, color: string) => {
   pokemonStore.setSelectedColor(color);
   router.push({
@@ -82,7 +75,6 @@ const goDetails = (id: number, name: string, color: string) => {
   });
 };
 
-// ciclo de vida para mostrar los pokemon despues de montado el Dom
 onMounted(() => {
   if (pokemonStore.pokemonList.length === 0) {
     pokemonStore.fetchPokemon();
@@ -95,7 +87,6 @@ onMounted(() => {
     class="min-h-screen flex flex-col items-center"
     style="background-color: #fde047"
   >
-    <!-- stilo del logo principal de pokemon  -->
     <div class="mb-8">
       <img
         :src="logo"
@@ -107,7 +98,6 @@ onMounted(() => {
     <div
       class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-4xl mb-8"
     >
-      <!-- q-input buscador de pokemones -->
       <div class="w-full sm:w-auto">
         <q-input
           v-model="searchName"
@@ -119,7 +109,6 @@ onMounted(() => {
         />
       </div>
 
-      <!-- opciones para seleccionar el tipo de pokemon  -->
       <div class="w-full sm:w-auto">
         <q-select
           v-model="selectedType"
@@ -151,7 +140,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!--estilo del  Botón de Inicio -->
     <div class="mb-8">
       <q-btn
         label="Inicio"
@@ -161,7 +149,6 @@ onMounted(() => {
       />
     </div>
 
-    <!-- organizacion de tarjetas con grid  -->
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-6xl pt-8"
     >
@@ -180,7 +167,6 @@ onMounted(() => {
       Cargando...
     </div>
 
-    <!-- Botones para cargar más Pokémon y subir -->
     <div
       class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-12 pb-12"
     >
