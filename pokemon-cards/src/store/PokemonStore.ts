@@ -16,7 +16,7 @@ export const usePokemonStore = defineStore('pokemon', {
       this.loading = true;
       try {
         const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon?offset=${this.offset}&limit=${this.limit}` // Limitar la cantidad de Pokémon
+          `https://pokeapi.co/api/v2/pokemon?offset=${this.offset}&limit=${this.limit}`
         );
 
         const newPokemon = await Promise.all(
