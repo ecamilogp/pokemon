@@ -12,13 +12,11 @@ const router = useRouter(); //para poder usar la ruta
 const pokemonStore = usePokemonStore(); //para usar el store
 const searchName = ref(''); //variable reactiva para buscar pokemon
 const selectedType = ref<TypeOption | null>(null); //variable reactiva para buscar los tipos de pokemon
-const pokemonLimit = ref(28); // Limitar la cantidad de Pokémon mostrados
 
 //limpia el input y el select para que vuelvan a aparecer todos los pokemon
 const resetFilters = () => {
   searchName.value = '';
   selectedType.value = null;
-  pokemonLimit.value = 28;
 };
 
 //esto se encarga de filtrar los pokemon por nombre o por su tipo
@@ -38,7 +36,7 @@ const filteredPokemons = computed(() => {
     return NameFound && typesFound;
   });
 
-  return filteredList.slice(0, pokemonLimit.value);
+  return filteredList.slice();
 });
 
 //colores para las tarjetas dependiendo del tipo de pokemon
@@ -66,8 +64,7 @@ const typeColors: Record<string, string> = {
 
 //función para cargar más Pokémon
 const loadMorePokemons = () => {
-  pokemonLimit.value += 20;
-  pokemonStore.fetchPokemon();
+  pokemonStore.morePokemon();
 };
 
 //función para desplazarse hacia arriba
@@ -87,7 +84,9 @@ const goDetails = (id: number, name: string, color: string) => {
 
 // ciclo de vida para mostrar los pokemon despues de montado el Dom
 onMounted(() => {
-  pokemonStore.fetchPokemon();
+  if (pokemonStore.pokemonList.length === 0) {
+    pokemonStore.fetchPokemon();
+  }
 });
 </script>
 

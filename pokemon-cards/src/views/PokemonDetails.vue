@@ -4,11 +4,13 @@ import logo from '../assets/logo pokemon.png';
 import pokebola from '../assets/Pokebola.png';
 import { usePokemonStore } from '../store/PokemonStore';
 import { useRoute } from 'vue-router';
+import type { DetailedPokemon } from '../interface/pokemonInterface';
 
+const loading = ref(true);
 const pokemonStore = usePokemonStore(); //accedemos al store
 const route = useRoute(); //usamos la ruta para traer informacion
 
-const pokemonDetails = ref({
+const pokemonDetails = ref<DetailedPokemon>({
   name: '',
   image: '',
   height: 0,
@@ -20,19 +22,49 @@ const pokemonDetails = ref({
     hp: 0,
   },
   description: '',
+  habitat: '',
+  generation: '',
+  id: 0,
+  type: [],
 });
 
 const id = route.params.id; //traemos el id desde la ruta  como parametro ya que es dinamico
 
-onMounted(async () => {
-  await pokemonStore.fetchPokemon(); //accedemos al store para traer los pokemon
+const pokemonTypes = [
+  { label: 'Normal ♻️', value: 'normal' },
+  { label: 'Lucha 🥊', value: 'fighting' },
+  { label: 'Volador 🕊️', value: 'flying' },
+  { label: 'Veneno ☠️', value: 'poison' },
+  { label: 'Tierra 🌍', value: 'ground' },
+  { label: 'Roca 🪨', value: 'rock' },
+  { label: 'Bicho 🦟', value: 'bug' },
+  { label: 'Fantasma 👻', value: 'ghost' },
+  { label: 'Acero ⚙️', value: 'steel' },
+  { label: 'Fuego 🔥', value: 'fire' },
+  { label: 'Agua 💧', value: 'water' },
+  { label: 'Planta 🌱', value: 'grass' },
+  { label: 'Eléctrico ⚡', value: 'electric' },
+  { label: 'Psíquico 🧠', value: 'psychic' },
+  { label: 'Hielo ❄️', value: 'ice' },
+  { label: 'Dragón 🐉', value: 'dragon' },
+  { label: 'Oscuro 🌑', value: 'dark' },
+  { label: 'Hada 🧚', value: 'fairy' },
+];
 
-  //aqui lo que hacemos es buscar el pokemon que coincida con el id para traer toda la informacion
-  const pokemon = pokemonStore.pokemonList.find(
-    (p: { id: number }) => p.id === Number(id)
-  );
-  // si el id corresponde a un pokemon y lo encuentra nos trae la informacion desde el store
-  if (pokemon) {
+const pokemonHabitats = [
+  { label: 'Cueva 🦇', value: 'cave' },
+  { label: 'Bosque 🌳', value: 'forest' },
+  { label: 'Pradera 🌾', value: 'grassland' },
+  { label: 'Montaña ⛰️', value: 'mountain' },
+  { label: 'Mar 🌊', value: 'sea' },
+  { label: 'Urbano 🏙️', value: 'urban' },
+  { label: 'Orilla del mar 🌊', value: 'waters-edge' },
+  { label: 'Raro 🌟', value: 'rare' },
+];
+
+onMounted(async () => {
+  try {
+    const pokemon = await pokemonStore.fetchPokemonDetails(`${id}`);
     pokemonDetails.value = {
       name: pokemon.name,
       image: pokemon.image,
@@ -40,9 +72,15 @@ onMounted(async () => {
       weight: pokemon.weight,
       stats: pokemon.stats,
       description: pokemon.description,
+      habitat: pokemon.habitat,
+      generation: pokemon.generation,
+      id: pokemon.id,
+      type: pokemon.type,
     };
-  } else {
-    console.error('No se encontraron detalles para este Pokémon');
+    loading.value = false;
+  } catch (error) {
+    console.error('No se encontraron detalles para este Pokémon', error);
+    loading.value = false;
   }
 });
 </script>
@@ -81,10 +119,12 @@ onMounted(async () => {
         :style="{ backgroundColor: pokemonStore.selectedColor || '#CBD5E0' }"
       >
         <div class="p-4 text-white">
-          <h2 class="text-3xl font-bold drop-shadow-lg">#{{ id }}</h2>
+          <h2 class="text-3xl font-bold drop-shadow-lg">
+            #{{ id }} - {{ pokemonDetails.generation }}
+          </h2>
         </div>
 
-        <!-- Imagen y Descripción de la tarjeta de detalle  -->
+        <!-- Imagen y Descripción de la tarjeta de detalle -->
         <div class="flex flex-col items-center text-center p-4">
           <div
             class="w-40 h-40 rounded-full flex items-center justify-center shadow-lg border-4 border-white"
@@ -101,6 +141,20 @@ onMounted(async () => {
           <h1 class="text-3xl font-extrabold text-gray-800 capitalize mt-4">
             {{ pokemonDetails.name }}
           </h1>
+
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold text-gray-800">Tipo de Pokémon</h3>
+            <div class="flex justify-center gap-4 mt-2">
+              <span
+                v-for="(type, index) in pokemonDetails.type"
+                :key="index"
+                class="px-3 py-1 bg-yellow-200 text-amber-900 font-semibold rounded-full shadow-md"
+              >
+                {{ pokemonTypes.find((t) => t.value === type)?.label || type }}
+              </span>
+            </div>
+          </div>
+
           <div
             class="flex items-center justify-center mt-4 text-gray-700 gap-4"
           >
@@ -115,6 +169,7 @@ onMounted(async () => {
               Peso: {{ pokemonDetails.weight }} kg
             </span>
           </div>
+
           <p class="text-black mt-4 leading-relaxed text-sm">
             {{ pokemonDetails.description }}
           </p>
@@ -173,6 +228,19 @@ onMounted(async () => {
                 </td>
                 <td class="py-3 px-4 text-center text-gray-700">
                   {{ pokemonDetails.stats.hp }}
+                </td>
+              </tr>
+
+              <tr class="border-t border-gray-200 hover:bg-gray-50">
+                <td class="py-3 px-4 text-gray-700 flex items-center gap-2">
+                  🌍 Hábitat
+                </td>
+                <td class="py-3 px-4 text-center text-gray-700">
+                  {{
+                    pokemonHabitats.find(
+                      (habitat) => habitat.value === pokemonDetails.habitat
+                    )?.label || pokemonDetails.habitat
+                  }}
                 </td>
               </tr>
             </tbody>
