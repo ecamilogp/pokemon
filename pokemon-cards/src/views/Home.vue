@@ -18,7 +18,6 @@ const resetFilters = () => {
   selectedType.value = null;
 };
 
-//esto se encarga de filtrar los pokemon por nombre o por su tipo
 const filteredPokemons = computed(() => {
   const filteredList = pokemonStore.pokemonList.filter((pokemon: Pokemon) => {
     const NameFound = pokemon.name
