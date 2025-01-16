@@ -7,8 +7,8 @@ import { useRoute } from 'vue-router';
 import type { DetailedPokemon } from '../interface/pokemonInterface';
 
 const loading = ref(true);
-const pokemonStore = usePokemonStore(); //accedemos al store
-const route = useRoute(); //usamos la ruta para traer informacion
+const pokemonStore = usePokemonStore();
+const route = useRoute();
 
 const pokemonDetails = ref<DetailedPokemon>({
   name: '',
@@ -28,7 +28,7 @@ const pokemonDetails = ref<DetailedPokemon>({
   type: [],
 });
 
-const id = route.params.id; //traemos el id desde la ruta  como parametro ya que es dinamico
+const id = route.params.id;
 
 const pokemonTypes = [
   { label: 'Normal ♻️', value: 'normal' },
@@ -90,7 +90,6 @@ onMounted(async () => {
     class="flex items-center justify-center min-h-screen p-4"
     style="background-color: #fde047"
   >
-    <!-- boton con imagen para volver al inicio -->
     <div class="absolute top-4 left-4 z-10">
       <router-link
         to="/pokemon"
@@ -101,7 +100,6 @@ onMounted(async () => {
       </router-link>
     </div>
 
-    <!-- Logo de Pokémon -->
     <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
       <img
         :src="logo"
@@ -113,7 +111,6 @@ onMounted(async () => {
     <div
       class="w-full max-w-4xl rounded-xl shadow-2xl border border-black bg-white mt-24 overflow-hidden flex flex-col lg:flex-row cursor-pointer"
     >
-      <!-- Encabezado de la tarjeta de dettale-->
       <div
         class="w-full lg:w-1/2 flex flex-col justify-between"
         :style="{ backgroundColor: pokemonStore.selectedColor || '#CBD5E0' }"
@@ -124,7 +121,6 @@ onMounted(async () => {
           </h2>
         </div>
 
-        <!-- Imagen y Descripción de la tarjeta de detalle -->
         <div class="flex flex-col items-center text-center p-4">
           <div
             class="w-40 h-40 rounded-full flex items-center justify-center shadow-lg border-4 border-white"
@@ -176,7 +172,6 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- Tabla de Estadísticas de detalles como fuerza velocidad etc aqui sabemos que porcentaje de habilidades tiene   -->
       <div
         class="w-full lg:w-1/2 bg-gray-200 p-4 flex flex-col justify-center items-center"
       >

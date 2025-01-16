@@ -4,15 +4,14 @@ import type { Pokemon, DetailedPokemon } from '../interface/pokemonInterface';
 
 export const usePokemonStore = defineStore('pokemon', {
   state: () => ({
-    pokemonList: [] as DetailedPokemon[], // Aquí almacenamos los Pokémon
-    loading: false, // Estado de carga
-    selectedColor: '' as string, // Este estado es para almacenar el color del Pokémon seleccionado
+    pokemonList: [] as DetailedPokemon[],
+    loading: false,
+    selectedColor: '' as string,
     offset: 0,
     limit: 40,
   }),
 
   actions: {
-    // Método para traer los Pokémon y hacer un mapeo para ver los tipos
     async fetchPokemon() {
       this.loading = true;
       try {
@@ -34,7 +33,6 @@ export const usePokemonStore = defineStore('pokemon', {
       }
     },
 
-    //esta segunda peticion que se hace es para traer descripciones detalles caracteristicas habilidades etc
     async fetchPokemonDetails(name: string): Promise<DetailedPokemon> {
       try {
         const details = await axios.get(
@@ -68,7 +66,7 @@ export const usePokemonStore = defineStore('pokemon', {
           description:
             descriptionResponse.data.flavor_text_entries.find(
               (entry: { language: { name: string }; flavor_text: string }) =>
-                entry.language.name === 'es' // Configurar el lenguaje en español
+                entry.language.name === 'es'
             )?.flavor_text || 'No description available',
           habitat: descriptionResponse.data.habitat?.name || 'Desconocido',
           generation:
@@ -80,12 +78,10 @@ export const usePokemonStore = defineStore('pokemon', {
       }
     },
 
-    // Acción para guardar el color seleccionado
     setSelectedColor(color: string) {
       this.selectedColor = color;
     },
 
-    // Acción para obtener el color seleccionado
     getSelectedColor() {
       return this.selectedColor;
     },

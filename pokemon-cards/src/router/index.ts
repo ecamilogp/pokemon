@@ -13,7 +13,6 @@ const routes = [
         component: Home,
       },
       {
-        //ruta dinamica para observar los detalles de los pokemon
         path: '/pokemon/:id/:name',
         name: 'PokemonDetails',
         component: () => import('../views/PokemonDetails.vue'),

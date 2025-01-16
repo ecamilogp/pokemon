@@ -5,7 +5,6 @@ export interface Pokemon {
   type: string[];
 }
 
-//extencion de la interfaz para usar la informacion de los pokemon
 export interface DetailedPokemon extends Pokemon {
   height: number;
   weight: number;

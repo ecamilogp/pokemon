@@ -15,8 +15,6 @@ const props = defineProps({
 </script>
 
 <template>
-  <!--estilo y margin para la tarjeta y que se diferencie cada una -->
-
   <div
     class="rounded-xl shadow-lg p-1 bg-black cursor-pointer"
     :style="{ maxWidth: '210px', margin: '1rem' }"
@@ -30,7 +28,6 @@ const props = defineProps({
         borderRadius: '25px',
       }"
     >
-      <!--esto se encarga del estilo de la Imagen del pokemon en la tarjeta  -->
       <q-card-section class="flex justify-center relative">
         <div
           class="w-32 h-32 bg-gray-100 rounded-full -mt-14 z-10 flex items-center justify-center shadow-md"
@@ -43,7 +40,6 @@ const props = defineProps({
         </div>
       </q-card-section>
 
-      <!-- estilo para el nombre y el id del pokemon dentro de la tarjeta  -->
       <q-card-section class="text-center">
         <div class="bg-gray-100 text-sm text-gray-900 mb-1">
           #{{ props.pokemon.id }}
