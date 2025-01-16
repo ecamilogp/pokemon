@@ -16,4 +16,6 @@ export interface DetailedPokemon extends Pokemon {
     speed: number;
     hp: number;
   };
+  habitat: string;
+  generation: string;
 }
