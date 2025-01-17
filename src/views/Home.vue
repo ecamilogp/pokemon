@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePokemonStore } from '../store/PokemonStore.ts';
+import { usePokemonStore } from '../store/PokemonStore';
 import { onMounted, ref, computed } from 'vue';
 import PokemonCard from '../components/pokemonCard.vue';
 import logo from '../assets/logo pokemon.png';
